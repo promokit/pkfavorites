@@ -1,0 +1,143 @@
+body, .nobootstrap {
+	height: 100%;
+	overflow: auto;
+	min-width: auto
+}
+#main {
+	height: 100%;
+	padding-bottom: 0	
+}
+#force-new-theme .panel {
+	background:none;
+	border:none;
+}
+#force-new-theme .form-control {
+    font-size: .875rem;
+    line-height: 1.5;
+    color: #363a41;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #bbcdd2;
+    border-radius: 0;
+    box-shadow: none;
+    transition:border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    padding: .375rem .4375rem;
+}
+#force-new-theme .control-label {
+	font-weight: normal;
+	text-align: left
+}
+#force-new-theme .help-block {
+	color:#999;
+	font-size: 90%;
+	font-style: italic;
+}
+#force-new-theme .prestashop-switch{
+	position:relative;display:inline-block;min-width:130px;min-width:8.125rem;margin-top:3px;font-size:13.008px;font-size:.813rem;background-color:#eff1f2;border-radius:1px;text-align:center
+}
+#force-new-theme .prestashop-switch input{
+	position:absolute;opacity:0
+}
+#force-new-theme .prestashop-switch input:disabled+label{
+	cursor:not-allowed
+}
+#force-new-theme .prestashop-switch input:disabled:checked+label{
+	background-color:#bbcdd2
+}
+#force-new-theme .prestashop-switch label{
+	position:relative;z-index:2;float:left;width:50%;height:100%;padding:5px;margin:0;vertical-align:middle;text-align:center;text-transform:uppercase;color:#bbcdd2;font-weight:400;cursor:pointer;transition:color .2s ease-out;text-shadow: none;
+}
+#force-new-theme .prestashop-switch input:checked+label{
+	color:#fff
+}
+#force-new-theme .prestashop-switch>.slide-button{
+	position:absolute;top:0;left:0;padding:0;z-index:1;width:50%;height:100%;color:#fff;background-color:#c05c67;transition:all .3s ease-out
+}
+#force-new-theme .prestashop-switch input:last-of-type:checked~.slide-button{
+	background-color:#2eacce;left:50%
+}
+#force-new-theme .prestashop-switch.prestashop-switch-sm{
+	min-width:100px;min-width:6.25rem;font-size:12px;font-size:.75rem
+}
+#force-new-theme .prestashop-switch.prestashop-switch-lg{
+	font-size:16px;font-size:1rem
+}
+#force-new-theme .btn-default{
+	color:#fff;background-color:#25b9d7;border-color:#25b9d7;box-shadow:none;background: linear-gradient(180deg, rgba(31,157,182,1) 0%, rgba(31,157,182,1) 100%);display: flex;text-shadow: none;border-radius: 0;align-items: center;padding: 5px 15px
+}
+#force-new-theme .pull-right {
+	margin: 10px 15px 0 auto
+}
+#force-new-theme .form-group {
+	margin-bottom: 30px
+}
+#force-new-theme .form-group .form-group {margin:0}
+#force-new-theme .btn-default i{
+	font-size: 18px;height: 18px;width: 18px;margin-right: 4px;display: block;
+}
+#force-new-theme .btn-default:hover{
+	color:#fff;background-color:#3ed2f0;border-color:#3ed2f0
+}
+#force-new-theme .btn-default.focus{
+	box-shadow:none
+}
+#force-new-theme .btn-default:hover{
+	background-color:#1f9db6;border-color:#1e94ab
+}
+#force-new-theme .btn-default.focus{
+	box-shadow:none,0 0 0 .2rem rgba(37,185,215,.5)
+}
+#force-new-theme .inner-title {
+	margin-left: -15px;
+	margin-top: 20px;
+}
+#force-new-theme .inner-title+hr {
+	margin: 5px 0px 0 -15px;
+}
+#content #force-new-theme .card-header {
+    margin: 0
+}
+#content #force-new-theme #fieldset_0 {
+    padding: 0;
+    border:none;
+}
+#force-new-theme .nav-tabs {
+    background-color: #f1f1f1;
+    margin-bottom: 20px
+}
+#force-new-theme .nav-tabs > li > a {
+    padding: 1rem 2.5rem;
+    display: block;
+    text-decoration: none;
+}
+#force-new-theme .nav-tabs > li.active > a {
+    color:#363a41;
+    background-color: #fff;
+    border-top:.1875rem solid #25b9d7;
+}
+#force-new-theme .input-group.form-control {
+    padding: 0;
+    border:none;
+}
+#force-new-theme .form-control::placeholder {
+    color:#ccc;
+}
+#force-new-theme .form-control .input-group-addon {
+    border:1px solid #bbcdd2;
+    border-left: none;
+    display: flex;
+    padding: 0 10px;
+    align-items: center;
+}
+#force-new-theme .mColorPickerTrigger {margin-top: 4px}
+#force-new-theme #module_form {width:100%;}
+#force-new-theme #module_form .tab-content > .tab-pane {
+    max-width: 900px;
+    margin:0 auto;
+}
+#force-new-theme + .bootstrap.panel {
+    max-width: 83.33333%;
+    margin: 0 auto;
+}
+.nav-pills {border:none}
+.dropdown-toggle:not(.dropdown-toggle-split):after {display:none}

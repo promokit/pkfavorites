@@ -1,0 +1,90 @@
+.favoritesButton svg {
+    fill:transparent;
+    stroke: currentColor;
+    stroke-width:40px;
+}
+.favoritesButton svg,
+.favoritesButton span {
+    pointer-events: none
+}
+.favoritesButton.icon_checked svg {
+    fill:currentColor;
+    color:inherit
+}
+.product-miniature .favoritesButton.icon_checked {
+    background: #e1e1e1
+}
+.page-my-account #content .links a span.link-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column
+}
+.links .link-item svg {
+    width:2.5rem;
+    height:2.5rem
+}
+.account-list #favorites-link {
+    padding: 0;
+    width:100%
+}
+#favorites-list .hook-reviews,
+#favorites-list .short-desc,
+.account-list #favorites-link .svgic {
+    display:none
+}
+
+/* "fixed" mode */
+.displayProductButtonFixed .favoritesButton {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 9;
+    background: none;
+    border: none;
+    padding: 0;
+    color:#333
+}
+.displayProductButtonFixed .favoritesButton svg {
+    width: 14px;
+    height: 14px
+}
+.displayProductButtonFixed .favoritesButton:hover svg {
+    fill:currentColor
+}
+.displayProductButtonFixed .favoritesButton.pktopright {
+    left:auto;
+    right:15px
+}
+.product-miniature .displayProductButtonFixed .favoritesButton:hover,
+.product-miniature .displayProductButtonFixed .favoritesButton.icon_checked {
+    background: none;
+    color:#000
+}
+
+/* stand alone mode */
+.product-miniature .favoritesButton.fav-standalone {
+    align-items: center;
+    background: #fff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    padding: 5px;
+    position: absolute;
+    right:10px;
+    top:10px
+}
+.product-miniature .favoritesButton.fav-standalone .svgic {
+    transform: translateY(3px)
+}
+.product-miniature .favoritesButton.fav-standalone.icon_checked,
+#product .favoritesButton.fav-standalone.icon_checked svg {
+    color:#f00
+}
+#product .favoritesButton.fav-standalone {
+    display: flex;
+    align-items: center
+}
+#product .favoritesButton.fav-standalone > svg {
+    margin: 2px 4px 0 0
+}

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="admin" source-language="es-ES" target-language="es-ES" datatype="plaintext">
+    <body>
+      <trans-unit id="b21522fa2fe28bb48d2d89c739d290fb">
+        <source>favorites</source>
+        <target>favoritos</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="a34e0796b9c15d09300f67d972379722">
+        <source>My favorite products</source>
+        <target>Mis productos favoritos</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="910885435dbc44a22b68cb45c79e4a7e">
+        <source>Add to favorites</source>
+        <target>Añadir a favoritos</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="7188286e36fc6c1892dd53aaa54237fb">
+        <source>Remove from favorites</source>
+        <target>Quitar de favoritos</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="cabc22b40f99f82b69b3be9dd3a94b35">
+        <source>The product has been added to your [1]favorites[/1]</source>
+        <target>El producto ha sido añadido a su [1]favoritos[/1]</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="0c1bf861abd4f90914ec3d682b59bc69">
+        <source>The product has been removed from [1]favorites[/1]</source>
+        <target>El producto ha sido eliminado de [1]favoritos[/1]</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="70f90aa4f9df6f5fc4c69754c6d81ff7">
+        <source>No favorite products have been determined just yet</source>
+        <target>Aún no se han determinado productos favoritos</target>
+        <note>Line: </note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
