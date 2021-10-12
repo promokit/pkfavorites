@@ -307,8 +307,4 @@ class Pkfavorites extends Module
           ]
         ];
     }
-
-    public function multishop() {
-        
-    }
 }
