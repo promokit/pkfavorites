@@ -48,7 +48,7 @@ class Favorites {
     /**
      * Set the context of current event
      * @param {string} action - what action to do
-     * @returns {Object} Event context
+     * @returns {object} Event context
      */
     setContext(action) {
         const context = {
@@ -98,7 +98,7 @@ class Favorites {
      * Make a reqest to module controller
      * @param {object} Context of current event
      * @param {string} pid - the ID of a product
-     * @returns 
+     * @returns {object} - ready to render data§
      */
     async makeRequest(context, pid) {
         try {
@@ -132,7 +132,7 @@ class Favorites {
      * Update button view and state
      * @param {object} btn - current button element
      * @param {object} context - current button context
-     * @returns Promise
+     * @returns {Promise} Promise object that just make a delay
      */
     updateButton(btn, context) {
         // toggle button "action" attribute and "active" class
@@ -225,10 +225,10 @@ class Favorites {
 
     /**
      * Set a timeout 
-     * @returns Promise
+     * @returns {Promise} Promise object that just make a delay
      */
     wait() {
         return new Promise(resolve => setTimeout(resolve, this.animationTime));
     }
 }
-(() => new Favorites())();
+new Favorites();
