@@ -1,7 +1,11 @@
+/** Class representing Favorite Products feature */
 class Favorites {
 
     animationTime = 700; // ms
 
+    /**
+     * Crates an event listeners for Favorite buttons
+     */
     constructor() {
         if (typeof pkfavorites === 'undefined') {
             return console.error('Promokit Favorites module is not installed properly. Try to reset it.');
@@ -9,6 +13,10 @@ class Favorites {
         document.body.addEventListener('click', this.clickHandler.bind(this));
     }
 
+    /**
+     * Get the list of classes
+     * @return {object} 
+     */
     get classes() {
         return {
             sidebar: 'js-tab-favorites',
@@ -37,6 +45,11 @@ class Favorites {
         this.doAction(btn, context);
     }
 
+    /**
+     * Set the context of current event
+     * @param {string} action - what action to do
+     * @returns {Object} Event context
+     */
     setContext(action) {
         const context = {
             url: pkfavorites.add,
@@ -81,6 +94,12 @@ class Favorites {
         this.displayMessage(context.message, context.state);
     }
 
+    /**
+     * Make a reqest to module controller
+     * @param {object} Context of current event
+     * @param {string} pid - the ID of a product
+     * @returns 
+     */
     async makeRequest(context, pid) {
         try {
             const url = `${context.url}&id_product=${pid}`;
@@ -99,11 +118,22 @@ class Favorites {
         }
     }
 
+    /**
+     * Toggle button loader
+     * @param {object} btn - current button element
+     * @param {*} action - what action to do
+     */
     loaderToggler(btn, action) {
         action === 'on' && btn.classList.add(this.classes.inProgress);
         action === 'off' && btn.classList.remove(this.classes.inProgress);
     }
 
+    /**
+     * Update button view and state
+     * @param {object} btn - current button element
+     * @param {object} context - current button context
+     * @returns Promise
+     */
     updateButton(btn, context) {
         // toggle button "action" attribute and "active" class
         btn.dataset.action = context.action === 'add' ? 'remove' : 'add';
@@ -130,11 +160,20 @@ class Favorites {
         return this.wait();
     }
 
+    /**
+     * Hide product instance in a sidebar or dropdown sections
+     * @param {object} btn - current button element
+     */
     hideProduct(btn) {
         btn.closest(`.${this.classes.mainParent}`).style.transition = `all ${this.animationTime}ms ease-in-out`;
         btn.closest(`.${this.classes.mainParent}`).style.opacity = 0;   
     }
 
+    /**
+     * Render a list of favorite products in a sidebar or dropdown sections
+     * @param {object} data 
+     * @returns nothing
+     */
     renderProducts(data) {
         const dropdown = document.querySelector(`.${this.classes.dropdown}`);
         const sidebar = document.querySelector(`.${this.classes.sidebar}`);
@@ -155,6 +194,11 @@ class Favorites {
         data.products_number <= 0 && dropdown.parent.classList.add(this.classes.hidden);
     }
 
+    /**
+     * Update a counter of favorite products
+     * @param {number} quantity 
+     * @returns nothing
+     */
     updateCounter(quantity) {
         const counter = document.querySelector(`.${this.classes.counter}`);
 
@@ -165,6 +209,11 @@ class Favorites {
         if (quantity > 0) counter.classList.remove(this.classes.hidden);
     }
 
+    /**
+     * Render a popup message 
+     * @param {string} message - a text message to show
+     * @param {string} state - a state of error
+     */
     displayMessage(message, state) {
         $.jGrowl(message, {
             theme: `${$.jGrowl.defaults.theme} ${state}`,
@@ -174,6 +223,10 @@ class Favorites {
         state === 'error' && console.error(message);
     }
 
+    /**
+     * Set a timeout 
+     * @returns Promise
+     */
     wait() {
         return new Promise(resolve => setTimeout(resolve, this.animationTime));
     }
