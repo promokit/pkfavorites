@@ -32,8 +32,6 @@
 {if isset($isProductPage) && $isProductPage}
     {assign var='printButtonText' value="<span>{$btnText}</span>"}
     {append var='btnClasses' value='icon-button'}
-    {append var='btnClasses' value='flex-container'}
-    {append var='btnClasses' value='align-items-center'}
 {else}
     {append var='btnClasses' value='btn'}
     {if isset($config.overall_number) && ($config.overall_number == 1)}

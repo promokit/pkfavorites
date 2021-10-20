@@ -215,7 +215,6 @@ class Pkfavorites extends Module
     public function hookDisplayHeader($params)
     {
         $jsFile = 'modules/'.$this->name.'/views/assets/js/scripts'.(_PS_MODE_DEV_ ? '' : '.min').'.js';
-        $jsFile = 'modules/'.$this->name.'/views/assets/js/scripts.js';
 
         $this->context->controller->addJqueryPlugin('jgrowl');
         $this->context->controller->registerJavascript($this->name, $jsFile, ['position' => 'bottom','priority' => 420, 'attributes' => 'defer']);

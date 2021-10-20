@@ -98,7 +98,7 @@ class Favorites {
      * Make a reqest to module controller
      * @param {object} Context of current event
      * @param {string} pid - the ID of a product
-     * @returns {object} - ready to render data§
+     * @returns {object} - ready to render data
      */
     async makeRequest(context, pid) {
         try {
@@ -124,8 +124,10 @@ class Favorites {
      * @param {*} action - what action to do
      */
     loaderToggler(btn, action) {
-        action === 'on' && btn.classList.add(this.classes.inProgress);
-        action === 'off' && btn.classList.remove(this.classes.inProgress);
+        const loaderElement = btn.querySelector('span') ? btn.querySelector('svg') : btn;
+
+        action === 'on' && loaderElement.classList.add(this.classes.inProgress);
+        action === 'off' && loaderElement.classList.remove(this.classes.inProgress);
     }
 
     /**
@@ -172,7 +174,6 @@ class Favorites {
     /**
      * Render a list of favorite products in a sidebar or dropdown sections
      * @param {object} data 
-     * @returns nothing
      */
     renderProducts(data) {
         const dropdown = document.querySelector(`.${this.classes.dropdown}`);
@@ -197,7 +198,6 @@ class Favorites {
     /**
      * Update a counter of favorite products
      * @param {number} quantity 
-     * @returns nothing
      */
     updateCounter(quantity) {
         const counter = document.querySelector(`.${this.classes.counter}`);
