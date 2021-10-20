@@ -184,14 +184,14 @@ class Favorites {
         if (!dropdown) return;
 
         // fix dropdown wrong height
-        dropdown.parent.style.height = 'auto';
+        dropdown.parentElement.style.height = 'auto';
 
         // update product list
         dropdown.innerHTML = data.miniproducts;
 
         // update visual state classes
-        data.products_number > 0 && dropdown.parent.classList.remove(this.classes.hidden);
-        data.products_number <= 0 && dropdown.parent.classList.add(this.classes.hidden);
+        data.products_number > 0 && dropdown.parentElement.classList.remove(this.classes.hidden);
+        data.products_number <= 0 && dropdown.parentElement.classList.add(this.classes.hidden);
     }
 
     /**

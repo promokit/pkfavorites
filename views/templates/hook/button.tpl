@@ -8,8 +8,9 @@
 * @license   You only can use module, nothing more!
 *}
 {strip}
+{assign var='overall' value=''}
 {assign var='printButtonText' value=''}
-{assign var='btnClasses' value=['favoritesButton']}
+{assign var='btnClasses' value=['favoritesButton', 'flex-container', 'align-items-center']}
 {if isset($config.button_position)}
     {append var='btnClasses' value=$config.button_position}
 {/if}
@@ -29,16 +30,20 @@
 {/if}
 
 {if isset($isProductPage) && $isProductPage}
-    {assign var='printButtonText' value="{$btnText}"}
+    {assign var='printButtonText' value="<span>{$btnText}</span>"}
     {append var='btnClasses' value='icon-button'}
     {append var='btnClasses' value='flex-container'}
     {append var='btnClasses' value='align-items-center'}
 {else}
     {append var='btnClasses' value='btn'}
+    {if isset($config.overall_number) && ($config.overall_number == 1)}
+        {assign var='overall' value=$overallNumber}
+    {/if}
 {/if}
 
 <a href="#" class="{' '|implode:$btnClasses}" data-pid="{$idProduct}" data-action="{$action}" title="{$btnText}" aria-label="{$btnText}" role="button">
+  {$overall}
   <svg class="svgic"><use xlink:href="#si-love"></use></svg>
-  {if $printButtonText != ''}<span>{$printButtonText}</span>{/if}
+  {$printButtonText nofilter}
 </a>
 {/strip}

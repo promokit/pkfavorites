@@ -26,6 +26,18 @@ class Form extends \Module
 
     public function getForm($values)
     {
+        $toggler = [
+            [
+                'id' => 'active_off',
+                'value' => 0,
+                'label' => $this->translator->trans('No', [], 'Admin.Global')
+            ],[
+                'id' => 'active_on',
+                'value' => 1,
+                'label' => $this->translator->trans('Yes', [], 'Admin.Global')
+            ],
+        ];
+
         $input = [];
 
         $input[] = [
@@ -69,6 +81,15 @@ class Form extends \Module
                 ]
             ];
         }
+
+        $input[] = [
+            'type' => 'switch',
+            'label' => $this->translator->trans('Display overall favorites number', [], 'Modules.Pkfavorites.Admin'),
+            'name' => 'overall_number',
+            'class' => 'ps-switch',
+            'is_bool' => true,
+            'values' => $toggler,
+        ];
 
         $formConfig = [
             'form' => [

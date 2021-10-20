@@ -38,6 +38,7 @@ class Pkfavorites extends Module
     const DEFAULTS = [
         'button_hook' => 'displayProductButton',
         'button_position' => 'pktopright',
+        'overall_number' => false,
     ];
 
     public $config;
@@ -121,21 +122,22 @@ class Pkfavorites extends Module
 
     public function getContent()
     {
-        $output = '';
-        if (Tools::isSubmit('submitPkfavoritesModule'))
+        if (!Tools::isSubmit('submitPkfavoritesModule'))
         {
-            $config = self::DEFAULTS;
+            return $this->renderForm();
+        }
 
-            foreach ($config as $key => $value)
-            {
-                $config[$key] = Tools::getValue($key);
-            }
+        $config = self::DEFAULTS;
 
-            if ($this->setConfig($config)) {
-                $output .= $this->displayConfirmation($this->trans('Settings updated', [], 'Modules.Pkcompare.Admin'));
-            } else {
-                $output .= $this->displayError($this->trans('Unable to update settings', [], 'Modules.Pkcompare.Admin'));
-            }
+        foreach ($config as $key => $value)
+        {
+            $config[$key] = Tools::getValue($key);
+        }
+
+        if ($this->setConfig($config)) {
+            $output = $this->displayConfirmation($this->trans('Settings updated', [], 'Modules.Pkfavorites.Admin'));
+        } else {
+            $output = $this->displayError($this->trans('Unable to update settings', [], 'Modules.Pkfavorites.Admin'));
         }
 
         return $output.$this->renderForm();
@@ -181,7 +183,6 @@ class Pkfavorites extends Module
     public function hookDisplayMyAccountBlock($params = [])
     {
         $params['product_page'] = false;
-        $params['isList'] = true;
         $this->setTemplateVariables($params);
         return $this->fetch($this->templates['myaccount']);
     }
@@ -214,6 +215,7 @@ class Pkfavorites extends Module
     public function hookDisplayHeader($params)
     {
         $jsFile = 'modules/'.$this->name.'/views/assets/js/scripts'.(_PS_MODE_DEV_ ? '' : '.min').'.js';
+        $jsFile = 'modules/'.$this->name.'/views/assets/js/scripts.js';
 
         $this->context->controller->addJqueryPlugin('jgrowl');
         $this->context->controller->registerJavascript($this->name, $jsFile, ['position' => 'bottom','priority' => 420, 'attributes' => 'defer']);
@@ -226,7 +228,9 @@ class Pkfavorites extends Module
           'pkMedia' => new Media
         ]);
 
-        return $this->fetch($this->templates['header']).(($this->standalone === true) ? $this->fetch($this->templates['svg']) : '');
+        return $this->fetch(
+            $this->templates['header']).(($this->standalone === true) ? $this->fetch($this->templates['svg']) : ''
+        );
     }
 
     public function hookDisplaySvgIcon($params)
@@ -239,14 +243,16 @@ class Pkfavorites extends Module
 
     public function hookDisplayBackOfficeHeader()
     {
-        if (defined('_PS_ADMIN_DIR_') && (Tools::getValue('configure') == $this->name))
+        if (!defined('_PS_ADMIN_DIR_') || (Tools::getValue('configure') !== $this->name))
         {
-            $this->admin_webpath = str_ireplace(_PS_CORE_DIR_, '', _PS_ADMIN_DIR_);
-            $this->admin_webpath = preg_replace('/^' . preg_quote(DIRECTORY_SEPARATOR, '/') . '/', '', $this->admin_webpath);
-
-            $this->context->controller->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/theme.css', 'all', 1);
-            $this->context->controller->addCSS($this->_path . 'views/assets/css/admin.css', 'all');
+            return;
         }
+        
+        $this->admin_webpath = str_ireplace(_PS_CORE_DIR_, '', _PS_ADMIN_DIR_);
+        $this->admin_webpath = preg_replace('/^' . preg_quote(DIRECTORY_SEPARATOR, '/') . '/', '', $this->admin_webpath);
+
+        $this->context->controller->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/theme.css', 'all', 1);
+        $this->context->controller->addCSS($this->_path . 'views/assets/css/admin.css', 'all');
     }
 
     public function getFavorites()
@@ -264,15 +270,17 @@ class Pkfavorites extends Module
           $id_product = false;
         }
 
+        $isFavorite = $this->favorite->isCustomerFavoriteProduct($this->context->customer->id, $id_product);
+        $overallNumber = $this->favorite->countOverallNumber($this->context->customer->id, $id_product, $isFavorite);
+
         $this->context->smarty->assign([
           'config' => $this->config,
           'is_standalone' => $this->standalone,
           'pkModuleName' => $this->name,
           'idProduct' => $id_product,
           'isProductPage' => $params['product_page'],
-          'isList' => isset($params['isList']) ? $params['isList'] : false,
-          'controllerUrl' => $this->context->link->getModuleLink($this->name, $this->controllers[0]),
-          'isFavorite' => $this->favorite->isCustomerFavoriteProduct($this->context->customer->id, $id_product)
+          'isFavorite' => $isFavorite,
+          'overallNumber' => $overallNumber
         ]);
     }
 
