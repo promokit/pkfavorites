@@ -33,14 +33,13 @@
     {assign var='printButtonText' value="<span>{$btnText}</span>"}
     {append var='btnClasses' value='icon-button'}
 {else}
-    {append var='btnClasses' value='btn'}
     {if isset($config.overall_number) && ($config.overall_number == 1)}
         {assign var='overall' value=$overallNumber}
     {/if}
+    {append var='btnClasses' value='btn'}
 {/if}
 
 <a href="#" class="{' '|implode:$btnClasses}" data-pid="{$idProduct}" data-action="{$action}" title="{$btnText}" aria-label="{$btnText}" role="button">
-  {$overall}
   <svg class="svgic"><use xlink:href="#si-love"></use></svg>
   {$printButtonText nofilter}
 </a>

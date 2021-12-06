@@ -117,7 +117,7 @@ class Pkfavorites extends Module
 
     public function getConfig()
     {
-        return unserialize(Configuration::get(self::DBKEY));
+        return array_merge(self::DEFAULTS, unserialize(Configuration::get(self::DBKEY))); 
     }
 
     public function getContent()
