@@ -114,7 +114,7 @@ class FavoriteProduct extends \ObjectModel
 			AND `id_shop` = '.Context::getContext()->shop->id);
 	}
 
-    public function countOverallNumber($id_customer, $id_product, $is_favorite)
+    public function countOverallNumber($id_customer, $id_product)
     {
         $number = Db::getInstance()->getValue('
             SELECT COUNT(*)
@@ -122,9 +122,11 @@ class FavoriteProduct extends \ObjectModel
             WHERE `id_product` = '.(int)$id_product.'
             AND `id_shop` = '.Context::getContext()->shop->id);
 
-        //if ($is_favorite) $number+1;
+        if (self::isCustomerFavoriteProduct($id_customer, $id_product)) {
+            $number = !$number ? 1 : $number+1;
+        }
 
-        return ($number > 0) ? $number : '';
+        return $number ? $number : 0;
     }
 
     public function getProductsForTemplate($id_customer)

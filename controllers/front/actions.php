@@ -26,14 +26,19 @@ class pkfavoritesActionsModuleFrontController extends ModuleFrontController
     {
         (Tools::getValue('process') === 'add') ? $this->processAdd() : $this->processRemove();
 
-        $products = $this->favorite->getProductsForTemplate($this->context->customer->id);
+        $cid = Context::getContext()->customer->id ? Context::getContext()->customer->id : 0;
+        $isFavorite = $this->favorite->isCustomerFavoriteProduct($cid, $this->favorite->id_product);
+        $products = $this->favorite->getProductsForTemplate($cid);
 
         header('Content-Type: application/json');
 
         die(json_encode([
             'miniproducts' => $this->module->standalone ? false : $this->renderContent($products, $this->module->templates['part_miniproducts']),
             'products' => $this->renderContent($products, $this->module->templates['part_products']),
-            'products_number' => count($products)
+            'products_number' => count($products),
+            'overall_number' => (int)$this->favorite->countOverallNumber($cid, $this->favorite->id_product),
+            'cid' => $cid,
+            'id_product' => $this->favorite->id_product
         ]));
     }
 

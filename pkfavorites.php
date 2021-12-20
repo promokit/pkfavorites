@@ -47,7 +47,7 @@ class Pkfavorites extends Module
     {
         $this->name = 'pkfavorites';
         $this->tab = 'front_office_features';
-        $this->version = '2.3.0';
+        $this->version = '2.4.0';
         $this->author = 'promokit.eu';
         $this->need_instance = 0;
         $this->controllers = ['account'];
@@ -117,7 +117,8 @@ class Pkfavorites extends Module
 
     public function getConfig()
     {
-        return array_merge(self::DEFAULTS, unserialize(Configuration::get(self::DBKEY))); 
+        $dbData = unserialize(Configuration::get(self::DBKEY));
+        return array_merge(self::DEFAULTS, $dbData ? $dbData : []);
     }
 
     public function getContent()
@@ -285,8 +286,7 @@ class Pkfavorites extends Module
 
     public function checkCustomer()
     {
-        if (!isset($this->context->customer) || !$this->context->customer->isLogged())
-        {
+        if (!isset($this->context->customer) || !$this->context->customer->isLogged()) {
             return;
         }
         // copy favorite products from cookies to database
@@ -294,8 +294,7 @@ class Pkfavorites extends Module
 
         if (empty($list)) return;
 
-        foreach ($list as $product_id)
-        {
+        foreach ($list as $product_id) {
             $this->favorite->addToFavorites($product_id);
         }
     }

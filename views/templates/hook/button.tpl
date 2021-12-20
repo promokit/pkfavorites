@@ -34,7 +34,7 @@
     {append var='btnClasses' value='icon-button'}
 {else}
     {if isset($config.overall_number) && ($config.overall_number == 1)}
-        {assign var='overall' value=$overallNumber}
+        {assign var='printButtonText' value="<i>{$overallNumber}</i>"}
     {/if}
     {append var='btnClasses' value='btn'}
 {/if}

@@ -7,6 +7,13 @@
 .favoritesButton span {
     pointer-events: none
 }
+.favoritesButton i {
+    font-style: normal;
+    padding-left: 3px
+}
+.favoritesButton i:empty {
+    display:none
+}
 .favoritesButton.icon_checked svg {
     fill:currentColor;
     color:inherit
@@ -30,7 +37,8 @@
 }
 #favorites-list .hook-reviews,
 #favorites-list .short-desc,
-.account-list #favorites-link .svgic {
+.account-list #favorites-link .svgic,
+.in_progress i {
     display:none
 }
 
@@ -57,6 +65,7 @@
     right:15px
 }
 .product-miniature .displayProductButtonFixed .favoritesButton:hover,
+.product-miniature .displayProductButtonFixed .favoritesButton:focus,
 .product-miniature .displayProductButtonFixed .favoritesButton.icon_checked {
     background: none;
     color:#000

@@ -84,11 +84,14 @@ class Favorites {
         // update button view and state
         await this.updateButton(btn, context);
 
+        // update product counter
+        this.updateProductCounter(btn, data.overall_number);
+
         // update favorite products list
         this.renderProducts(data);
 
         // update product counter
-        this.updateCounter(data.products_number);
+        this.updateOverallCounter(data.products_number);
 
         // display success message
         this.displayMessage(context.message, context.state);
@@ -199,7 +202,7 @@ class Favorites {
      * Update a counter of favorite products
      * @param {number} quantity 
      */
-    updateCounter(quantity) {
+    updateOverallCounter(quantity) {
         const counter = document.querySelector(`.${this.classes.counter}`);
 
         if (!counter) return;
@@ -207,6 +210,19 @@ class Favorites {
         counter.textContent = quantity;
 
         if (quantity > 0) counter.classList.remove(this.classes.hidden);
+    }
+
+    /**
+     * Update a counter of current products
+     * @param {element} btn
+     * @param {number} quantity
+     */
+    updateProductCounter(btn, quantity) {
+        const counter = btn.querySelector('i');
+
+        if (!counter || !quantity) return;
+
+        counter.textContent = quantity;
     }
 
     /**
