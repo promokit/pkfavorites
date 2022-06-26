@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="admin511otjqkn" source-language="de-DE" target-language="de-DE" datatype="plaintext">
+    <body>
+      <trans-unit id="fe4be3f646374d3c8a35423cad833ba4">
+        <source>Display overall favorites number</source>
+        <target>Display overall favorites number</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="e9650e450198a5c0daf51d79e7b66af8">
+        <source>Product Miniature Button Position</source>
+        <target>Product Miniature Button Position</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="89936e6901a383c9fa9458b5922716d9">
+        <source>Product Miniature Button Hook</source>
+        <target>Product Miniature Button Hook</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="b9129c167a73844d16d28b0949719155">
+        <source>Unable to update settings</source>
+        <target>Unable to update settings</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="c888438d14855d7d96a2724ee9c306bd">
+        <source>Settings updated</source>
+        <target>Settings updated</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="f437e59f2e61dc75e1f257c0ea8d5f69">
+        <source>A fast way for your customers to save a product to favorites list</source>
+        <target>A fast way for your customers to save a product to favorites list</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="34faa1c1575e0ffc78c2a909bf4664ea">
+        <source>Promokit Favorites</source>
+        <target>Promokit Favorites</target>
+        <note>Line: </note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

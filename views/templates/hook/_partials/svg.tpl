@@ -16,10 +16,10 @@
 </symbol>
 {/capture}
 {capture name="svg_begin" assign="svg_begin"}
-<!--noindex--><svg class="pk-svg-library" style="display: none" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><defs>
+<svg class="pk-svg-library" style="display: none" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><defs>
 {/capture}
 {capture name="svg_end" assign="svg_end"}
-</defs></svg><!--/noindex-->
+</defs></svg>
 {/capture}
 
 {if isset($is_standalone) && $is_standalone}

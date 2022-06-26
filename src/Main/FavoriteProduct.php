@@ -57,7 +57,7 @@ class FavoriteProduct extends \ObjectModel
 
 	public function getFavoriteProductsIDs($id_customer)
 	{
-        if (!Context::getContext()->customer->isLogged())
+        if (!Context::getContext()->customer->id || !Context::getContext()->customer->isLogged())
         {
             return $this->getFavoritesFromCookies();
         } 
