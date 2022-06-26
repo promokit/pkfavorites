@@ -9,9 +9,10 @@ https://alysum5.promokit.eu/en/3-women
 
 ## Installation
 
-* The quickest way to install is manually download the compiled module and upload it through the 'Modules > Module Manager > Upload a module' menu in PrestaShop
-* Activate the Module after installation is complete
-* Visit modules's configurations page to adjust settings
+* Open terminal and go to "modules" folder of your Prestashop
+* Run command: git clone https://github.com/promokit/pkfavorites.git
+* Go to Prestashop Back-office -> Modules Catalog page, find "Promokit Favorites" module and click "Install" button
+* Visit module configuration page to adjust settings
 
 ## Submit an issue
 
