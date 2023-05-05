@@ -3,7 +3,7 @@
 * Promokit Favorites Module
 *
 * @package   alysum
-* @version   2.3.0
+* @version   2.4.0
 * @author    https://promokit.eu
 * @copyright Copyright since 2011 promokit.eu <@email:support@promokit.eu>
 * @license   You only can use module, nothing more!
@@ -24,7 +24,7 @@ class pkfavoritesActionsModuleFrontController extends ModuleFrontController
 
     public function postProcess()
     {
-        (Tools::getValue('process') === 'add') ? $this->processAdd() : $this->processRemove();
+        (Tools::getValue('process') === 'add') ? $this->favorite->addToFavorites() : $this->favorite->removeFromFavorites();
 
         $cid = Context::getContext()->customer->id ? Context::getContext()->customer->id : 0;
         $isFavorite = $this->favorite->isCustomerFavoriteProduct($cid, $this->favorite->id_product);
@@ -40,22 +40,6 @@ class pkfavoritesActionsModuleFrontController extends ModuleFrontController
             'cid' => $cid,
             'id_product' => $this->favorite->id_product
         ]));
-    }
-
-    /**
-     * Remove favorite product
-     */
-    public function processRemove()
-    {
-        $this->context->customer->isLogged() ? $this->favorite->removeFromDb() : $this->favorite->removeFromCookies();
-    }
-
-    /**
-     * Add favorite product
-     */
-    public function processAdd()
-    {
-        $this->context->customer->isLogged() ? $this->favorite->addToDb() : $this->favorite->addToCookies();
     }
 
     public function renderContent($products, $template)

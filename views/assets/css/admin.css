@@ -10,6 +10,8 @@ body, .nobootstrap {
 #force-new-theme .panel {
 	background:none;
 	border:none;
+    display: flex;
+    flex-direction: column;
 }
 #force-new-theme .form-control {
     font-size: .875rem;

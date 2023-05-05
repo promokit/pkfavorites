@@ -5,7 +5,7 @@ _Favorite Products provides opportunity to save products into favorites list._
 _It works for unregistered users as well as for logged-in. It keeps saved products in cookies if you are "guest" and copy them to database when you you log in._
 
 ## Demo
-https://alysum5.promokit.eu/en/3-women
+https://alysum.promokit.eu/en/3-women
 
 ## Installation
 

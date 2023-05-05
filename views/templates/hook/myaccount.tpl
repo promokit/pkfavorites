@@ -9,8 +9,10 @@
 *}
 
 <a class="col-lg-4 col-md-6 col-sm-6 col-xs-12" id="favorites-link" href="{$link->getModuleLink('pkfavorites', 'account')}">
-  <span class="link-item">
-    <svg class="svgic smooth500"><use xlink:href="#si-like-stroke"></use></svg>
-    <span>{l s='My favorite products' d='Modules.Pkfavorites.Shop'}</span>
-  </span>
+    <span class="link-item">
+        <svg class="svgic">
+            <use href="{_THEME_IMG_DIR_}lib.svg#like-stroke"></use>
+        </svg>
+        <span>{l s='My favorite products' d='Modules.Pkfavorites.Shop'}</span>
+    </span>
 </a>

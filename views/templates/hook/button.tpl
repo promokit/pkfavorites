@@ -7,10 +7,9 @@
 * @copyright Copyright since 2011 promokit.eu <@email:support@promokit.eu>
 * @license   You only can use module, nothing more!
 *}
-{strip}
 {assign var='overall' value=''}
 {assign var='printButtonText' value=''}
-{assign var='btnClasses' value=['favoritesButton', 'flex-container', 'align-items-center']}
+{assign var='btnClasses' value=['favoritesButton', 'flex-container', 'align-items-center', 'favorites-button']}
 {if isset($config.button_position)}
     {append var='btnClasses' value=$config.button_position}
 {/if}
@@ -39,8 +38,10 @@
     {append var='btnClasses' value='btn'}
 {/if}
 
-<a href="#" class="{' '|implode:$btnClasses}" data-pid="{$idProduct}" data-action="{$action}" title="{$btnText}" aria-label="{$btnText}" role="button">
-  <svg class="svgic"><use xlink:href="#si-love"></use></svg>
-  {$printButtonText nofilter}
+<a href="#" class="{' '|implode:$btnClasses}" data-pid="{$idProduct}" data-action="{$action}" title="{$btnText}"
+    aria-label="{$btnText}" role="button">
+    <svg class="svgic">
+        <use href="{_THEME_IMG_DIR_}lib.svg#love"></use>
+    </svg>
+    {$printButtonText nofilter}
 </a>
-{/strip}

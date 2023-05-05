@@ -3,7 +3,7 @@
 * Promokit Favorites Module
 *
 * @package   alysum
-* @version   2.3.0
+* @version   2.4.0
 * @author    https://promokit.eu
 * @copyright Copyright since 2011 promokit.eu <@email:support@promokit.eu>
 * @license   You only can use module, nothing more!
@@ -24,42 +24,42 @@ use ProductAssembler;
 use Validate;
 use Context;
 use Product;
+use Hook;
 use Db;
 
 class FavoriteProduct extends \ObjectModel
 {
-	public $id;
+    public $id;
 
-	public $id_product;
+    public $id_product;
 
-	public $id_customer;
+    public $id_customer;
 
-	public $id_shop;
+    public $id_shop;
 
-	public $date_add;
+    public $date_add;
 
-	public $date_upd;
+    public $date_upd;
 
-	/**
-	 * @see ObjectModel::$definition
-	 */
-	public static $definition = [
-		'table' => 'favorite_product',
-		'primary' => 'id_favorite_product',
-		'fields' => [
-			'id_product' =>	 ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true],
-			'id_customer' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true],
-			'id_shop' =>	 ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true],
-			'date_add' =>	 ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
-			'date_upd' =>	 ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
-		],
-	];
+    /**
+     * @see ObjectModel::$definition
+     */
+    public static $definition = [
+        'table' => 'favorite_product',
+        'primary' => 'id_favorite_product',
+        'fields' => [
+            'id_product' =>  ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true],
+            'id_customer' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true],
+            'id_shop' =>     ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true],
+            'date_add' =>    ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+            'date_upd' =>    ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+        ],
+    ];
 
-	public function getFavoriteProductsIDs($id_customer)
-	{
-        if (!Context::getContext()->customer->id || !Context::getContext()->customer->isLogged())
-        {
-            return $this->getFavoritesFromCookies();
+    public function getFavoriteProductsIDs($id_customer)
+    {
+        if (!Context::getContext()->customer->id || !Context::getContext()->customer->isLogged()) {
+            return self::getFavoritesFromCookies();
         } 
 
         $list = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
@@ -71,48 +71,45 @@ class FavoriteProduct extends \ObjectModel
 
         $listArr = [];
 
-        if (is_array($list))
-        {
-            foreach ($list as $prd)
-            {
+        if (is_array($list)) {
+            foreach ($list as $prd) {
                 $listArr[] = $prd['id_product'];
             }
         }
 
         return $listArr;
-	}
+    }
 
-	public function getFavoriteProductInstance($id_customer, $id_product)
-	{
-		$id_favorite_product = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT `id_favorite_product`
-			FROM `'._DB_PREFIX_.'favorite_product`
-			WHERE `id_customer` = '.(int)$id_customer.'
-			AND `id_product` = '.(int)$id_product.'
-			AND `id_shop` = '.Context::getContext()->shop->id
-		);
+    public function getFavoriteProductInstance($id_customer, $id_product)
+    {
+        $id_favorite_product = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+            SELECT `id_favorite_product`
+            FROM `'._DB_PREFIX_.'favorite_product`
+            WHERE `id_customer` = '.(int)$id_customer.'
+            AND `id_product` = '.(int)$id_product.'
+            AND `id_shop` = '.Context::getContext()->shop->id
+        );
 
-		if ($id_favorite_product) {
-			return new FavoriteProduct($id_favorite_product);
+        if ($id_favorite_product) {
+            return new FavoriteProduct($id_favorite_product);
         }
 
-		return null;
-	}
+        return null;
+    }
 
-	public static function isCustomerFavoriteProduct($id_customer, $id_product)
-	{
-		if (!$id_customer)
-        {
+    public static function isCustomerFavoriteProduct($id_customer, $id_product)
+    {
+        if (!$id_customer) {
             return in_array($id_product, self::getFavoritesFromCookies());
         }
 
-		return (bool)Db::getInstance()->getValue('
-			SELECT COUNT(*)
-			FROM `'._DB_PREFIX_.'favorite_product`
-			WHERE `id_customer` = '.(int)$id_customer.'
-			AND `id_product` = '.(int)$id_product.'
-			AND `id_shop` = '.Context::getContext()->shop->id);
-	}
+        return (bool)Db::getInstance()->getValue('
+            SELECT COUNT(*)
+            FROM `'._DB_PREFIX_.'favorite_product`
+            WHERE `id_customer` = '.(int)$id_customer.'
+            AND `id_product` = '.(int)$id_product.'
+            AND `id_shop` = '.Context::getContext()->shop->id);
+    }
 
     public function countOverallNumber($id_customer, $id_product)
     {
@@ -131,57 +128,57 @@ class FavoriteProduct extends \ObjectModel
 
     public function getProductsForTemplate($id_customer)
     {
-      $FavoriteProduct = new FavoriteProduct();
-      $allFavoritesIDs = $FavoriteProduct->getFavoriteProductsIDs($id_customer);
-      $allFavorites = [];
-      
-      foreach ($allFavoritesIDs as $id)
-      {
+        $FavoriteProduct = new FavoriteProduct();
+        $allFavoritesIDs = $FavoriteProduct->getFavoriteProductsIDs($id_customer);
+        $allFavorites = [];
+
+        foreach ($allFavoritesIDs as $id) {
           $product = new Product((int)$id, true, Context::getContext()->language->id, Context::getContext()->shop->id);
 
-          if (Validate::isLoadedObject($product) && isset($product->name[Context::getContext()->language->id]))
-          {                   
+          if (Validate::isLoadedObject($product) && isset($product->name[Context::getContext()->language->id])) {          
               $product = [(array)$product];
               $product[0]['id_product'] = $product[0]['id'];
               $allFavorites[$id] = $FavoriteProduct->prepareBlocksProducts($product);
           }
-      }
+        }
 
-      unset($product);
+        unset($product);
 
-      return $allFavorites;
+        return $allFavorites;
     }
 
-    public function addToFavorites($product_id)
+    public function addToFavorites()
+    {
+        Context::getContext()->customer->isLogged() ? $this->addToDb() : $this->addToCookies();
+        Hook::exec('actionFavoritesUpdate', []);
+    }
+
+    public function removeFromFavorites()
+    {
+        Context::getContext()->customer->isLogged() ? $this->removeFromDb() : $this->removeFromCookies();
+        Hook::exec('actionFavoritesUpdate', []);
+    }
+
+    public function addProductToFavorites($product_id)
     {
         $product = new Product($product_id);
         // check if product exists
-        if (!Validate::isLoadedObject($product) || $this->isCustomerFavoriteProduct(Context::getContext()->cookie->id_customer, $product->id))
-        {
+        if (!Validate::isLoadedObject($product) || $this->isCustomerFavoriteProduct(Context::getContext()->cookie->id_customer, $product->id)) {
             return false;
         }
 
-        $this->id_product = $product->id;
+        $this->id_product = $product_id;
         $this->id_customer = (int)Context::getContext()->cookie->id_customer;
         $this->id_shop = (int)Context::getContext()->shop->id;
 
         unset($product);
 
-        if ($this->add())
-        {
-            return true;
-        }
-        return false;
+        return $this->add();
     }
 
     public function addToDb()
     {
-        if ($this->addToFavorites($this->id_product))
-        {
-            return $this->addToCookies(); // sync to cookies
-        }
-
-        return false;
+        return $this->addProductToFavorites($this->id_product) ? $this->addToCookies() : false;
     }
 
     public function addToCookies()
@@ -189,14 +186,11 @@ class FavoriteProduct extends \ObjectModel
         // check if product exists
         if (!$this->isProduct()) return false;
 
-        $list = $this->getFavoritesFromCookies();
+        $list = self::getFavoritesFromCookies();
 
-        if (in_array($this->id_product, $list))
-        {
-            foreach ($list as $key => $value)
-            {
-                if ($this->id_product == $value)
-                {
+        if (in_array($this->id_product, $list)) {
+            foreach ($list as $key => $value) {
+                if ($this->id_product == $value) {
                     unset($list[$key]);
                 }
             }
@@ -218,8 +212,7 @@ class FavoriteProduct extends \ObjectModel
             Context::getContext()->cookie->id_customer, $this->id_product
         );
 
-        if ($favorite_product && $favorite_product->delete())
-        {
+        if ($favorite_product && $favorite_product->delete()) {
             $this->removeFromCookies($this->id_product); // sync to cookies
             return true;
         }
@@ -229,14 +222,11 @@ class FavoriteProduct extends \ObjectModel
 
     public function removeFromCookies()
     {
-        $list = $this->getFavoritesFromCookies(); 
+        $list = self::getFavoritesFromCookies(); 
 
-        if (in_array($this->id_product, $list))
-        {
-            foreach ($list as $key => $value)
-            {
-                if ($this->id_product == $value)
-                {
+        if (in_array($this->id_product, $list)) {
+            foreach ($list as $key => $value) {
+                if ($this->id_product == $value) {
                     unset($list[$key]);
                 }
             }
@@ -247,22 +237,17 @@ class FavoriteProduct extends \ObjectModel
 
     public function isProduct() {
         $product = new Product($this->id_product);
-
-        if (!Validate::isLoadedObject($product))
-        {
-            return false;
-        }
-
-        return true;
+        return Validate::isLoadedObject($product);
     }
 
-    public function setFavoritesToCookies($list) {
+    public function setFavoritesToCookies($list)
+    {
         Context::getContext()->cookie->favorites = trim(implode(',', $list), ',');
     }
 
-    public function getFavoritesFromCookies() {
-        if (isset(Context::getContext()->cookie->favorites))
-        {
+    public static function getFavoritesFromCookies()
+    {
+        if (isset(Context::getContext()->cookie->favorites)) {
             return explode(',', Context::getContext()->cookie->favorites);
         }
         return [];
@@ -274,15 +259,22 @@ class FavoriteProduct extends \ObjectModel
         $assembler = new ProductAssembler(Context::getContext());
         $presenterFactory = new ProductPresenterFactory(Context::getContext());
         $presentationSettings = $presenterFactory->getPresentationSettings();
-        $presenter = new ProductListingPresenter(new ImageRetriever(Context::getContext()->link), Context::getContext()->link, new PriceFormatter(), new ProductColorsRetriever(), Context::getContext()->getTranslator());
+        $presenter = new ProductListingPresenter(
+            new ImageRetriever(
+                Context::getContext()->link
+            ),
+            Context::getContext()->link,
+            new PriceFormatter(),
+            new ProductColorsRetriever(),
+            Context::getContext()->getTranslator()
+        );
 
-        if ($block)
-        {
-            foreach ($block as $key => $rawProduct)
-            {
+        if ($block) {
+            foreach ($block as $key => $rawProduct) {
                 $products_for_template[$key] = $presenter->present(
                     $presentationSettings,
-                    $assembler->assembleProduct($rawProduct), Context::getContext()->language
+                    $assembler->assembleProduct($rawProduct),
+                    Context::getContext()->language
                 );
             }
         }

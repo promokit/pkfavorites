@@ -1,6 +1,5 @@
 /** Class representing Favorite Products feature */
 class Favorites {
-
     animationTime = 700; // ms
 
     /**
@@ -15,11 +14,11 @@ class Favorites {
 
     /**
      * Get the list of classes
-     * @return {object} 
+     * @return {object}
      */
     get classes() {
         return {
-            sidebar: 'js-tab-favorites',
+            sidebar: 'js-tab-el-favorites',
             counter: 'js-pkfavorites-counter',
             dropdown: 'js-pkfavorites-container',
             iconActive: 'icon_checked',
@@ -27,8 +26,8 @@ class Favorites {
             buttonType: 'icon-button',
             mainParent: 'product-miniature',
             button: 'favoritesButton',
-            hidden: 'hidden'
-        }
+            hidden: 'hidden',
+        };
     }
 
     clickHandler(event) {
@@ -56,14 +55,14 @@ class Favorites {
             message: pkfavorites.phrases.added,
             button: pkfavorites.phrases.remove,
             state: 'success',
-            action
+            action,
         };
 
         if (action === 'remove') {
-            context.url = pkfavorites.remove,
-            context.message = pkfavorites.phrases.removed,
-            context.button = pkfavorites.phrases.add,
-            context.state = 'info'
+            (context.url = pkfavorites.remove),
+                (context.message = pkfavorites.phrases.removed),
+                (context.button = pkfavorites.phrases.add),
+                (context.state = 'info');
         }
 
         return context;
@@ -106,7 +105,7 @@ class Favorites {
     async makeRequest(context, pid) {
         try {
             const url = `${context.url}&id_product=${pid}`;
-            const response = await fetch(url, { method: 'POST' });
+            const response = await fetch(url, {method: 'POST'});
 
             if (!response.ok) throw new Error(`Error ${response.status}`);
 
@@ -115,9 +114,8 @@ class Favorites {
             if (!data) throw new Error('Empty response');
 
             return data;
-
-        } catch(e) {
-            this.displayMessage(e, 'error')
+        } catch (e) {
+            this.displayMessage(e, 'error');
         }
     }
 
@@ -170,13 +168,15 @@ class Favorites {
      * @param {object} btn - current button element
      */
     hideProduct(btn) {
-        btn.closest(`.${this.classes.mainParent}`).style.transition = `all ${this.animationTime}ms ease-in-out`;
-        btn.closest(`.${this.classes.mainParent}`).style.opacity = 0;   
+        btn.closest(
+            `.${this.classes.mainParent}`
+        ).style.transition = `all ${this.animationTime}ms ease-in-out`;
+        btn.closest(`.${this.classes.mainParent}`).style.opacity = 0;
     }
 
     /**
      * Render a list of favorite products in a sidebar or dropdown sections
-     * @param {object} data 
+     * @param {object} data
      */
     renderProducts(data) {
         const dropdown = document.querySelector(`.${this.classes.dropdown}`);
@@ -200,7 +200,7 @@ class Favorites {
 
     /**
      * Update a counter of favorite products
-     * @param {number} quantity 
+     * @param {number} quantity
      */
     updateOverallCounter(quantity) {
         const counter = document.querySelector(`.${this.classes.counter}`);
@@ -222,29 +222,30 @@ class Favorites {
 
         if (!counter || !quantity) return;
 
+        counter.setAttribute('productsnum', quantity);
         counter.textContent = quantity;
     }
 
     /**
-     * Render a popup message 
+     * Render a popup message
      * @param {string} message - a text message to show
      * @param {string} state - a state of error
      */
     displayMessage(message, state) {
         $.jGrowl(message, {
             theme: `${$.jGrowl.defaults.theme} ${state}`,
-            header: pkfavorites.phrases.title
+            header: pkfavorites.phrases.title,
         });
 
         state === 'error' && console.error(message);
     }
 
     /**
-     * Set a timeout 
+     * Set a timeout
      * @returns {Promise} Promise object that just make a delay
      */
     wait() {
-        return new Promise(resolve => setTimeout(resolve, this.animationTime));
+        return new Promise((resolve) => setTimeout(resolve, this.animationTime));
     }
 }
 new Favorites();

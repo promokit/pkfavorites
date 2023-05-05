@@ -3,7 +3,7 @@
 * Promokit Favorites Module
 *
 * @package   alysum
-* @version   2.3.0
+* @version   2.4.0
 * @author    https://promokit.eu
 * @copyright Copyright since 2011 promokit.eu <@email:support@promokit.eu>
 * @license   You only can use module, nothing more!
@@ -54,8 +54,8 @@ class Pkfavorites extends Module
 
         parent::__construct();
 
-        $this->displayName = $this->trans('Promokit Favorites', [], 'Modules.Pkfavorites.Admin');
-        $this->description = $this->trans('A fast way for your customers to save a product to favorites list', [], 'Modules.Pkfavorites.Admin');
+        $this->displayName = 'Promokit Favorites';
+        $this->description = 'A fast way for your customers to save a product to favorites list';
         $this->ps_versions_compliancy = ['min' => '1.7', 'max' => _PS_VERSION_];
 
         $this->favorite = new FavoriteProduct();
@@ -77,32 +77,23 @@ class Pkfavorites extends Module
 
     public function install()
     {
-        if (Shop::isFeatureActive()) {
-            Shop::setContext(Shop::CONTEXT_ALL);
-        }
+        Shop::isFeatureActive() && Shop::setContext(Shop::CONTEXT_ALL);
 
         $install = new Install;
 
-        if (parent::install()
-            && $this->registerHook(self::HOOK_LIST)
-            && $this->setConfig(self::DEFAULTS)
-            && $install->createTable()
-        ) {
-          return true;
-        }
-
-        return false;
+        return parent::install()
+                && $this->registerHook(self::HOOK_LIST)
+                && $this->setConfig(self::DEFAULTS)
+                && $install->createTable();
     }
 
     public function uninstall()
     {
         $install = new Install;
 
-        if (parent::uninstall() && $install->deleteTable() && Configuration::deleteByName(self::DBKEY)) {
-            return true;
-        }
-
-        return false;
+        return parent::uninstall() 
+                && $install->deleteTable() 
+                && Configuration::deleteByName(self::DBKEY);
     }
 
     public function isUsingNewTranslationSystem()
@@ -123,23 +114,19 @@ class Pkfavorites extends Module
 
     public function getContent()
     {
-        if (!Tools::isSubmit('submitPkfavoritesModule'))
-        {
+        if (!Tools::isSubmit('submitPkfavoritesModule')) {
             return $this->renderForm();
         }
 
         $config = self::DEFAULTS;
 
-        foreach ($config as $key => $value)
-        {
+        foreach ($config as $key => $value) {
             $config[$key] = Tools::getValue($key);
         }
 
-        if ($this->setConfig($config)) {
-            $output = $this->displayConfirmation($this->trans('Settings updated', [], 'Modules.Pkfavorites.Admin'));
-        } else {
-            $output = $this->displayError($this->trans('Unable to update settings', [], 'Modules.Pkfavorites.Admin'));
-        }
+        $output = $this->setConfig($config)
+            ? $this->displayConfirmation($this->trans('Settings updated', [], 'Modules.Pkfavorites.Admin'))
+            : $this->displayError($this->trans('Unable to update settings', [], 'Modules.Pkfavorites.Admin'));
 
         return $output.$this->renderForm();
     }
@@ -295,7 +282,7 @@ class Pkfavorites extends Module
         if (empty($list)) return;
 
         foreach ($list as $product_id) {
-            $this->favorite->addToFavorites($product_id);
+            $this->favorite->addProductToFavorites($product_id);
         }
     }
 
@@ -304,7 +291,9 @@ class Pkfavorites extends Module
         return [
           'module-'.$this->name.'-'.$this->controllers[0] => [
             'controller' => $this->controllers[0],
-            'rule'       => $this->trans('favorites', [], 'Modules.Pkfavorites.Shop'),
+            // disabled translatable URL for better performance
+            //'rule'       => $this->trans('favorites', [], 'Modules.Pkfavorites.Shop'),
+            'rule'       => 'favorites',
             'keywords'   => [],
             'params'     => [
               'fc'     => 'module',
