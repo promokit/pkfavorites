@@ -1,16 +1,17 @@
 <?php
+
 /**
-* Promokit Favorites Module
-*
-* @package   alysum
-* @version   2.4.0
-* @author    https://promokit.eu
-* @copyright Copyright since 2011 promokit.eu <@email:support@promokit.eu>
-* @license   You only can use module, nothing more!
-*/
+ * Promokit Favorites Module
+ *
+ * @package   alysum
+ * @version   2.4.0
+ * @author    https://promokit.eu
+ * @copyright Copyright since 2011 promokit.eu <@email:support@promokit.eu>
+ * @license   You only can use module, nothing more!
+ */
 
 if (!defined('_PS_VERSION_')) {
-  exit;
+    exit;
 }
 
 if (file_exists(dirname(__FILE__) . '/vendor/autoload.php')) {
@@ -61,13 +62,13 @@ class Pkfavorites extends Module
         $this->favorite = new FavoriteProduct();
         $this->standalone = false;
         $this->templates = [
-          'svg' => 'module:'.$this->name.'/views/templates/hook/_partials/svg.tpl',
-          'header' => 'module:'.$this->name.'/views/templates/hook/header.tpl',
-          'button' => 'module:'.$this->name.'/views/templates/hook/button.tpl',
-          'products' => 'module:'.$this->name.'/views/templates/hook/products.tpl',
-          'myaccount' => 'module:'.$this->name.'/views/templates/hook/myaccount.tpl',
-          'part_products' => 'module:'.$this->name.'/views/templates/hook/_partials/products.tpl',
-          'part_miniproducts' => 'module:'.$this->name.'/views/templates/hook/_partials/miniproducts.tpl'
+            'svg' => 'module:' . $this->name . '/views/templates/hook/_partials/svg.tpl',
+            'header' => 'module:' . $this->name . '/views/templates/hook/header.tpl',
+            'button' => 'module:' . $this->name . '/views/templates/hook/button.tpl',
+            'products' => 'module:' . $this->name . '/views/templates/hook/products.tpl',
+            'myaccount' => 'module:' . $this->name . '/views/templates/hook/myaccount.tpl',
+            'part_products' => 'module:' . $this->name . '/views/templates/hook/_partials/products.tpl',
+            'part_miniproducts' => 'module:' . $this->name . '/views/templates/hook/_partials/miniproducts.tpl'
         ];
 
         $this->config = $this->getConfig();
@@ -82,18 +83,18 @@ class Pkfavorites extends Module
         $install = new Install;
 
         return parent::install()
-                && $this->registerHook(self::HOOK_LIST)
-                && $this->setConfig(self::DEFAULTS)
-                && $install->createTable();
+            && $this->registerHook(self::HOOK_LIST)
+            && $this->setConfig(self::DEFAULTS)
+            && $install->createTable();
     }
 
     public function uninstall()
     {
         $install = new Install;
 
-        return parent::uninstall() 
-                && $install->deleteTable() 
-                && Configuration::deleteByName(self::DBKEY);
+        return parent::uninstall()
+            && $install->deleteTable()
+            && Configuration::deleteByName(self::DBKEY);
     }
 
     public function isUsingNewTranslationSystem()
@@ -128,7 +129,7 @@ class Pkfavorites extends Module
             ? $this->displayConfirmation($this->trans('Settings updated', [], 'Modules.Pkfavorites.Admin'))
             : $this->displayError($this->trans('Unable to update settings', [], 'Modules.Pkfavorites.Admin'));
 
-        return $output.$this->renderForm();
+        return $output . $this->renderForm();
     }
 
     protected function renderForm()
@@ -144,7 +145,7 @@ class Pkfavorites extends Module
         $helper->identifier = $this->identifier;
         $helper->submit_action = 'submitPkfavoritesModule';
         $helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false)
-            .'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+            . '&configure=' . $this->name . '&tab_module=' . $this->tab . '&module_name=' . $this->name;
         $helper->token = Tools::getAdminTokenLite('AdminModules');
 
         $helper->tpl_vars = [
@@ -158,13 +159,14 @@ class Pkfavorites extends Module
 
         $form = new AdminForm();
 
-        return $begin.$helper->generateForm([$form->getForm($values)]).$end;
+        return $begin . $helper->generateForm([$form->getForm($values)]) . $end;
     }
 
     public function hookDisplayCustomerAccount($params = [])
     {
         $params['product_page'] = false;
         $this->setTemplateVariables($params);
+
         return $this->fetch($this->templates['myaccount']);
     }
 
@@ -172,14 +174,16 @@ class Pkfavorites extends Module
     {
         $params['product_page'] = false;
         $this->setTemplateVariables($params);
+
         return $this->fetch($this->templates['myaccount']);
     }
 
     public function hookDisplayProductButton($params = [])
     {
-        if ( (isset($this->config['button_hook']) && ($this->config['button_hook'] == 'displayProductButton')) || !isset($this->config['button_hook']) ) {
+        if ((isset($this->config['button_hook']) && ($this->config['button_hook'] == 'displayProductButton')) || !isset($this->config['button_hook'])) {
             $params['product_page'] = false;
-            $this->setTemplateVariables($params); 
+            $this->setTemplateVariables($params);
+
             return $this->fetch($this->templates['button']);
         }
     }
@@ -188,7 +192,8 @@ class Pkfavorites extends Module
     {
         if (isset($this->config['button_hook']) && ($this->config['button_hook'] == 'displayProductButtonFixed')) {
             $params['product_page'] = false;
-            $this->setTemplateVariables($params); 
+            $this->setTemplateVariables($params);
+
             return $this->fetch($this->templates['button']);
         }
     }
@@ -197,44 +202,43 @@ class Pkfavorites extends Module
     {
         $params['product_page'] = true;
         $this->setTemplateVariables($params);
+
         return $this->fetch($this->templates['button']);
     }
 
     public function hookDisplayHeader($params)
     {
-        $jsFile = 'modules/'.$this->name.'/views/assets/js/scripts'.(_PS_MODE_DEV_ ? '' : '.min').'.js';
+        $jsFile = 'modules/' . $this->name . '/views/assets/js/scripts' . (_PS_MODE_DEV_ ? '' : '.min') . '.js';
 
         $this->context->controller->addJqueryPlugin('jgrowl');
-        $this->context->controller->registerJavascript($this->name, $jsFile, ['position' => 'bottom','priority' => 420, 'attributes' => 'defer']);
-        $this->context->controller->registerStylesheet($this->name, 'modules/'.$this->name.'/views/assets/css/styles.css', ['media' => 'all', 'priority' => 150]);
+        $this->context->controller->registerJavascript($this->name, $jsFile, ['position' => 'bottom', 'priority' => 420, 'attributes' => 'defer']);
+        $this->context->controller->registerStylesheet($this->name, 'modules/' . $this->name . '/views/assets/css/styles.css', ['media' => 'all', 'priority' => 150]);
 
         $this->smarty->assign([
-          'is_standalone' => $this->standalone,
-          'svg_tpl' => $this->templates['svg'],
-          'pkModuleName' => $this->name,
-          'pkMedia' => new Media
+            'is_standalone' => $this->standalone,
+            'svg_tpl' => $this->templates['svg'],
+            'pkModuleName' => $this->name,
+            'pkMedia' => new Media
         ]);
 
-        return $this->fetch(
-            $this->templates['header']).(($this->standalone === true) ? $this->fetch($this->templates['svg']) : ''
-        );
+        return $this->fetch($this->templates['header']) . (($this->standalone === true) ? $this->fetch($this->templates['svg']) : '');
     }
 
     public function hookDisplaySvgIcon($params)
     {
         $this->smarty->assign([
-          'is_standalone' => $this->standalone
+            'is_standalone' => $this->standalone
         ]);
+
         return $this->fetch($this->templates['svg']);
     }
 
     public function hookDisplayBackOfficeHeader()
     {
-        if (!defined('_PS_ADMIN_DIR_') || (Tools::getValue('configure') !== $this->name))
-        {
+        if (!defined('_PS_ADMIN_DIR_') || (Tools::getValue('configure') !== $this->name)) {
             return;
         }
-        
+
         $this->admin_webpath = str_ireplace(_PS_CORE_DIR_, '', _PS_ADMIN_DIR_);
         $this->admin_webpath = preg_replace('/^' . preg_quote(DIRECTORY_SEPARATOR, '/') . '/', '', $this->admin_webpath);
 
@@ -249,25 +253,22 @@ class Pkfavorites extends Module
 
     public function setTemplateVariables($params = [])
     {
-        $id_product = false;
+        $id_product = $params['product_page']
+            ? (int)Tools::getValue('id_product')
+            : (isset($params['product_id']) ? (int)$params['product_id'] : false);
 
-        if ($params['product_page']) {
-          $id_product = (int)Tools::getValue('id_product');
-        } elseif (isset($params['product_id'])) {
-          $id_product = (int)$params['product_id'];
-        }
 
         $isFavorite = $this->favorite->isCustomerFavoriteProduct($this->context->customer->id, $id_product);
         $overallNumber = $this->favorite->countOverallNumber($this->context->customer->id, $id_product, $isFavorite);
 
         $this->context->smarty->assign([
-          'config' => $this->config,
-          'is_standalone' => $this->standalone,
-          'pkModuleName' => $this->name,
-          'idProduct' => $id_product,
-          'isProductPage' => $params['product_page'],
-          'isFavorite' => $isFavorite,
-          'overallNumber' => $overallNumber
+            'config' => $this->config,
+            'is_standalone' => $this->standalone,
+            'pkModuleName' => $this->name,
+            'idProduct' => $id_product,
+            'isProductPage' => $params['product_page'],
+            'isFavorite' => $isFavorite,
+            'overallNumber' => $overallNumber
         ]);
     }
 
@@ -289,17 +290,17 @@ class Pkfavorites extends Module
     public function hookModuleRoutes()
     {
         return [
-          'module-'.$this->name.'-'.$this->controllers[0] => [
-            'controller' => $this->controllers[0],
-            // disabled translatable URL for better performance
-            //'rule'       => $this->trans('favorites', [], 'Modules.Pkfavorites.Shop'),
-            'rule'       => 'favorites',
-            'keywords'   => [],
-            'params'     => [
-              'fc'     => 'module',
-              'module' => $this->name,
-            ],
-          ]
+            'module-' . $this->name . '-' . $this->controllers[0] => [
+                'controller' => $this->controllers[0],
+                // disabled translatable URL for better performance
+                //'rule'       => $this->trans('favorites', [], 'Modules.Pkfavorites.Shop'),
+                'rule'       => 'favorites',
+                'keywords'   => [],
+                'params'     => [
+                    'fc'     => 'module',
+                    'module' => $this->name,
+                ],
+            ]
         ];
     }
 }
