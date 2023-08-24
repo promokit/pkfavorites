@@ -249,12 +249,12 @@ class Pkfavorites extends Module
 
     public function setTemplateVariables($params = [])
     {
+        $id_product = false;
+
         if ($params['product_page']) {
           $id_product = (int)Tools::getValue('id_product');
         } elseif (isset($params['product_id'])) {
           $id_product = (int)$params['product_id'];
-        } else {
-          $id_product = false;
         }
 
         $isFavorite = $this->favorite->isCustomerFavoriteProduct($this->context->customer->id, $id_product);
