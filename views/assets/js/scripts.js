@@ -50,20 +50,14 @@ class Favorites {
      * @returns {object} Event context
      */
     setContext(action) {
+        const isAdd = action === 'add';
         const context = {
-            url: pkfavorites.add,
-            message: pkfavorites.phrases.added,
-            button: pkfavorites.phrases.remove,
-            state: 'success',
+            url: isAdd ? pkfavorites.add : pkfavorites.remove,
+            message: isAdd ? pkfavorites.phrases.added : pkfavorites.phrases.removed,
+            button: isAdd ? pkfavorites.phrases.remove : pkfavorites.phrases.add,
+            state: isAdd ? 'success' : 'info',
             action,
         };
-
-        if (action === 'remove') {
-            (context.url = pkfavorites.remove),
-                (context.message = pkfavorites.phrases.removed),
-                (context.button = pkfavorites.phrases.add),
-                (context.state = 'info');
-        }
 
         return context;
     }
@@ -105,7 +99,7 @@ class Favorites {
     async makeRequest(context, pid) {
         try {
             const url = `${context.url}&id_product=${pid}`;
-            const response = await fetch(url, {method: 'POST'});
+            const response = await fetch(url, { method: 'POST' });
 
             if (!response.ok) throw new Error(`Error ${response.status}`);
 
@@ -127,8 +121,9 @@ class Favorites {
     loaderToggler(btn, action) {
         const loaderElement = btn.querySelector('span') ? btn.querySelector('svg') : btn;
 
-        action === 'on' && loaderElement.classList.add(this.classes.inProgress);
-        action === 'off' && loaderElement.classList.remove(this.classes.inProgress);
+        action === 'on'
+            ? loaderElement.classList.add(this.classes.inProgress)
+            : loaderElement.classList.remove(this.classes.inProgress);
     }
 
     /**
