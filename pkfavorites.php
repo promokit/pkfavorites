@@ -57,7 +57,7 @@ class Pkfavorites extends Module
 
         $this->displayName = 'Promokit Favorites';
         $this->description = 'A fast way for your customers to save a product to favorites list';
-        $this->ps_versions_compliancy = ['min' => '1.7', 'max' => _PS_VERSION_];
+        $this->ps_versions_compliancy = ['min' => '1.7.8', 'max' => _PS_VERSION_];
 
         $this->favorite = new FavoriteProduct();
         $this->standalone = false;
@@ -292,8 +292,6 @@ class Pkfavorites extends Module
         return [
             'module-' . $this->name . '-' . $this->controllers[0] => [
                 'controller' => $this->controllers[0],
-                // disabled translatable URL for better performance
-                //'rule'       => $this->trans('favorites', [], 'Modules.Pkfavorites.Shop'),
                 'rule'       => 'favorites',
                 'keywords'   => [],
                 'params'     => [

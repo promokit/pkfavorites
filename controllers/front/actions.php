@@ -18,6 +18,7 @@ class pkfavoritesActionsModuleFrontController extends ModuleFrontController
     public function init()
     {
         parent::init();
+
         $this->favorite = new FavoriteProduct();
         $this->favorite->id_product = (int)Tools::getValue('id_product');
     }
@@ -26,9 +27,9 @@ class pkfavoritesActionsModuleFrontController extends ModuleFrontController
     {
         (Tools::getValue('process') === 'add') ? $this->favorite->addToFavorites() : $this->favorite->removeFromFavorites();
 
-        $cid = Context::getContext()->customer->id ? Context::getContext()->customer->id : 0;
-        $isFavorite = $this->favorite->isCustomerFavoriteProduct($cid, $this->favorite->id_product);
-        $products = $this->favorite->getProductsForTemplate($cid);
+        $customerId = Context::getContext()->customer->id ?? 0;
+        $isFavorite = $this->favorite->isCustomerFavoriteProduct($customerId, $this->favorite->id_product);
+        $products = $this->favorite->getProductsForTemplate($customerId);
 
         header('Content-Type: application/json');
 
@@ -36,15 +37,18 @@ class pkfavoritesActionsModuleFrontController extends ModuleFrontController
             'miniproducts' => $this->module->standalone ? false : $this->renderContent($products, $this->module->templates['part_miniproducts']),
             'products' => $this->renderContent($products, $this->module->templates['part_products']),
             'products_number' => count($products),
-            'overall_number' => (int)$this->favorite->countOverallNumber($cid, $this->favorite->id_product),
-            'cid' => $cid,
+            'overall_number' => (int)$this->favorite->countOverallNumber($customerId, $this->favorite->id_product),
+            'cid' => $customerId,
             'id_product' => $this->favorite->id_product
         ]));
     }
 
     public function renderContent($products, $template)
     {
-        $this->context->smarty->assign(['products' => $products]);
+        $this->context->smarty->assign([
+            'products' => $products
+        ]);
+
         return $this->module->fetch($template);
     }
 }
