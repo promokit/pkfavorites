@@ -11,7 +11,7 @@
 {extends file='page.tpl'}
 
 {block name="page_content"}
-<div id="favorites-list" class="col-xs-12">
+<div class="favorites-list col-xs-12">
 	<h2 class="page-title">{l s='My favorite products' d='Modules.Pkfavorites.Shop'}</h2>
 	{if $favoriteProducts}
 		<div class="view_grid">
@@ -23,10 +23,9 @@
 				</div>
 			</div>
 		</div>
-	{else}
-		<p class="elementor-alert elementor-alert-info">
-			{l s='No favorite products have been determined just yet' d='Modules.Pkfavorites.Shop'}
-		</p>
 	{/if}
+	<p class="elementor-alert elementor-alert-info pk-no-products">
+		{l s='No favorite products have been determined just yet' d='Modules.Pkfavorites.Shop'}
+	</p>
 </div>
 {/block}

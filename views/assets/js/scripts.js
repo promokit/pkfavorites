@@ -135,16 +135,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             context.action === actions.remove &&
             (isSidebar || prestashop.page.page_name === favoritesController)
         ) {
-            hideProduct();
+            context.button.closest(selectors.mainParent).remove();
         }
 
         return wait();
-    };
-
-    const hideProduct = () => {
-        const rootElement = context.button.closest(selectors.mainParent);
-        rootElement.style.transition = `all ${animationTime}ms ease-in-out`;
-        rootElement.style.opacity = 0;
     };
 
     const renderProducts = () => {

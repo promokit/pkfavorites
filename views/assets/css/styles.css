@@ -22,3 +22,9 @@
         }
     }
 }
+.pk-no-products {
+    display: block;
+}
+.favorites-list:has(.product-miniature) .pk-no-products {
+    display: none;
+}
