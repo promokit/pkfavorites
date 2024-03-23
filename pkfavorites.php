@@ -194,6 +194,8 @@ class Pkfavorites extends Module
             $params['product_page'] = false;
             $this->setTemplateVariables($params);
 
+            $this->context->controller->registerStylesheet($this->name, 'modules/' . $this->name . '/views/assets/css/fixed.css', ['media' => 'all', 'priority' => 151]);
+
             return $this->fetch($this->templates['button']);
         }
     }
@@ -213,6 +215,9 @@ class Pkfavorites extends Module
         $this->context->controller->addJqueryPlugin('jgrowl');
         $this->context->controller->registerJavascript($this->name, $jsFile, ['position' => 'bottom', 'priority' => 420, 'attributes' => 'defer']);
         $this->context->controller->registerStylesheet($this->name, 'modules/' . $this->name . '/views/assets/css/styles.css', ['media' => 'all', 'priority' => 150]);
+        if ($this->standalone) {
+            $this->context->controller->registerStylesheet($this->name, 'modules/' . $this->name . '/views/assets/css/standalone.css', ['media' => 'all', 'priority' => 151]);
+        }
 
         $this->smarty->assign([
             'is_standalone' => $this->standalone,

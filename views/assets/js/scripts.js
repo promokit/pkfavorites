@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!counter || !context.data.products_number) return;
 
         counter.dataset[selectors.dataAttr] = context.data.products_number;
-        counter.textContent = context.data.context.data.products_number;
+        counter.textContent = context.data.products_number;
     };
 
     const updateOverallCounter = () => {
