@@ -1,104 +1,95 @@
-/** Class representing Favorite Products feature */
-class Favorites {
-    animationTime = 700; // ms
-
-    /**
-     * Crates an event listeners for Favorite buttons
-     */
-    constructor() {
-        if (typeof pkfavorites === 'undefined') {
-            return console.error('Promokit Favorites module is not installed properly. Try to reset it.');
-        }
-        document.body.addEventListener('click', this.clickHandler.bind(this));
+document.addEventListener('DOMContentLoaded', async () => {
+    if (typeof pkfavorites === 'undefined') {
+        console.error('Promokit Favorites module is not installed properly. Try to reset it.');
+        return;
     }
 
-    /**
-     * Get the list of classes
-     * @return {object}
-     */
-    get classes() {
-        return {
-            sidebar: 'js-tab-el-favorites',
-            counter: 'js-pkfavorites-counter',
-            dropdown: 'js-pkfavorites-container',
-            iconActive: 'icon_checked',
-            inProgress: 'in_progress',
-            buttonType: 'icon-button',
-            mainParent: 'product-miniature',
-            button: 'favoritesButton',
-            hidden: 'hidden',
-        };
-    }
+    let context = {};
 
-    clickHandler(event) {
-        const btn = event.target;
+    const favoritesController = 'module-pkfavorites-account';
+    const animationTime = 700; // ms
 
-        // check if "favorite" button clicked
-        if (!btn.classList.contains(this.classes.button)) return;
+    const actions = {
+        add: 'add',
+        remove: 'remove',
+    };
+    const selectors = {
+        sidebar: '.js-tab-el-favorites',
+        counter: '.js-pkfavorites-counter',
+        dropdown: '.js-pkfavorites-container',
+        iconActive: 'icon_checked',
+        inProgress: 'in_progress',
+        button: '.favorites-button',
+        dataAttr: 'productsnum',
+        mainParent: prestashop.themeSelectors.listing.product,
+        hidden: prestashop.themeSelectors.alysum.classes.hidden,
+    };
 
-        event.preventDefault();
-
-        // define the context depends on action
-        const context = this.setContext(btn.dataset.action);
-
-        this.doAction(btn, context);
-    }
-
-    /**
-     * Set the context of current event
-     * @param {string} action - what action to do
-     * @returns {object} Event context
-     */
-    setContext(action) {
-        const isAdd = action === 'add';
-        const context = {
+    const setContext = (target) => {
+        const { action, pid } = target.dataset;
+        const isAdd = action === actions.add;
+        Object.assign(context, {
+            button: target,
             url: isAdd ? pkfavorites.add : pkfavorites.remove,
             message: isAdd ? pkfavorites.phrases.added : pkfavorites.phrases.removed,
-            button: isAdd ? pkfavorites.phrases.remove : pkfavorites.phrases.add,
+            buttonTitle: isAdd ? pkfavorites.phrases.remove : pkfavorites.phrases.add,
             state: isAdd ? 'success' : 'info',
             action,
-        };
+            pid,
+        });
+    };
 
-        return context;
-    }
+    const setData = (data) => {
+        context = { ...context, data };
+    };
 
-    async doAction(btn, context) {
-        // get product ID
-        const pid = Number(btn.dataset.pid);
+    const addEventListeners = () => {
+        const buttons = document.querySelectorAll(selectors.button);
+        buttons?.forEach((button) => {
+            if (!button.dataset.listenersAdded) {
+                button.addEventListener('click', handleButtonClick);
+                button.dataset.listenersAdded = true;
+            }
+        });
+    };
 
-        if (!pid) throw new Error('Wrong Product ID');
+    const handleButtonClick = async (event) => {
+        event.preventDefault();
 
-        // add "in progress" loader
-        this.loaderToggler(btn, 'on');
+        if (!event.target.dataset.pid) {
+            displayMessage('Invalid product ID', 'error');
+            return;
+        }
 
-        // make a request
-        const data = await this.makeRequest(context, pid);
+        setContext(event.target);
 
-        // update button view and state
-        await this.updateButton(btn, context);
+        loaderToggler(true);
 
-        // update product counter
-        this.updateProductCounter(btn, data.overall_number);
+        await makeRequest();
+        await updateButton();
 
-        // update favorite products list
-        this.renderProducts(data);
+        renderProducts();
+        updateOverallCounter();
+        updateProductCounter(); // update button counter of clicked product if it's enabled
 
-        // update product counter
-        this.updateOverallCounter(data.products_number);
+        loaderToggler(false);
 
-        // display success message
-        this.displayMessage(context.message, context.state);
-    }
+        addEventListeners();
 
-    /**
-     * Make a reqest to module controller
-     * @param {object} Context of current event
-     * @param {string} pid - the ID of a product
-     * @returns {object} - ready to render data
-     */
-    async makeRequest(context, pid) {
+        displayMessage(context.message, context.state);
+    };
+
+    const loaderToggler = (action) => {
+        const buttonSpan = context.button.querySelector('span');
+        const loaderElement = buttonSpan || context.button;
+
+        loaderElement.classList.toggle(selectors.inProgress, action);
+    };
+
+    const makeRequest = async () => {
+        const url = `${context.url}&id_product=${context.pid}`;
+
         try {
-            const url = `${context.url}&id_product=${pid}`;
             const response = await fetch(url, { method: 'POST' });
 
             if (!response.ok) throw new Error(`Error ${response.status}`);
@@ -107,140 +98,95 @@ class Favorites {
 
             if (!data) throw new Error('Empty response');
 
-            return data;
+            setData(data);
         } catch (e) {
-            this.displayMessage(e, 'error');
+            displayMessage(e, 'error');
         }
-    }
-
-    /**
-     * Toggle button loader
-     * @param {object} btn - current button element
-     * @param {*} action - what action to do
-     */
-    loaderToggler(btn, action) {
-        const loaderElement = btn.querySelector('span') ? btn.querySelector('svg') : btn;
-
-        action === 'on'
-            ? loaderElement.classList.add(this.classes.inProgress)
-            : loaderElement.classList.remove(this.classes.inProgress);
-    }
-
-    /**
-     * Update button view and state
-     * @param {object} btn - current button element
-     * @param {object} context - current button context
-     * @returns {Promise} Promise object that just make a delay
-     */
-    updateButton(btn, context) {
-        // toggle button "action" attribute and "active" class
-        btn.dataset.action = context.action === 'add' ? 'remove' : 'add';
-        btn.classList.toggle(this.classes.iconActive);
-
-        // update button title
-        btn.setAttribute('title', context.button);
-
-        // if button has text element
-        const btnTitle = btn.querySelector('span');
-        btnTitle && (btnTitle.textContent = context.button);
-
-        // remove "in progress" loader
-        this.loaderToggler(btn, 'off');
-
-        // animate product removing from sidebar
-        const isSidebar = btn.closest(`.${this.classes.sidebar}`);
-
-        if (context.action === 'remove' && isSidebar) {
-            this.hideProduct(btn);
-        }
-
-        // return delay (.7s) promise to show animation
-        return this.wait();
-    }
-
-    /**
-     * Hide product instance in a sidebar or dropdown sections
-     * @param {object} btn - current button element
-     */
-    hideProduct(btn) {
-        btn.closest(
-            `.${this.classes.mainParent}`
-        ).style.transition = `all ${this.animationTime}ms ease-in-out`;
-        btn.closest(`.${this.classes.mainParent}`).style.opacity = 0;
-    }
-
-    /**
-     * Render a list of favorite products in a sidebar or dropdown sections
-     * @param {object} data
-     */
-    renderProducts(data) {
-        const dropdown = document.querySelector(`.${this.classes.dropdown}`);
-        const sidebar = document.querySelector(`.${this.classes.sidebar}`);
-
-        // if sidebar exist, render product list there
-        sidebar && (sidebar.innerHTML = data.products);
-
-        if (!dropdown) return;
-
-        // fix dropdown wrong height
-        dropdown.parentElement.style.height = 'auto';
-
-        // update product list
-        dropdown.innerHTML = data.miniproducts;
-
-        // update visual state classes
-        data.products_number > 0 && dropdown.parentElement.classList.remove(this.classes.hidden);
-        data.products_number <= 0 && dropdown.parentElement.classList.add(this.classes.hidden);
-    }
-
-    /**
-     * Update a counter of favorite products
-     * @param {number} quantity
-     */
-    updateOverallCounter(quantity) {
-        const counter = document.querySelector(`.${this.classes.counter}`);
-
-        if (!counter) return;
-
-        counter.textContent = quantity;
-
-        if (quantity > 0) counter.classList.remove(this.classes.hidden);
-    }
-
-    /**
-     * Update a counter of current products
-     * @param {element} btn
-     * @param {number} quantity
-     */
-    updateProductCounter(btn, quantity) {
-        const counter = btn.querySelector('i');
-
-        if (!counter || !quantity) return;
-
-        counter.setAttribute('productsnum', quantity);
-        counter.textContent = quantity;
-    }
+    };
 
     /**
      * Render a popup message
      * @param {string} message - a text message to show
      * @param {string} state - a state of error
      */
-    displayMessage(message, state) {
+    const displayMessage = (message, state) => {
         $.jGrowl(message, {
             theme: `${$.jGrowl.defaults.theme} ${state}`,
             header: pkfavorites.phrases.title,
         });
 
         state === 'error' && console.error(message);
-    }
+    };
 
-    /**
-     * Set a timeout
-     * @returns {Promise} Promise object that just make a delay
-     */
-    wait() {
+    const updateButton = () => {
+        context.button.dataset.action = {
+            add: actions.remove,
+            remove: actions.add,
+        }[context.action];
+        context.button.classList.toggle(selectors.iconActive);
+        context.button.setAttribute('title', context.buttonTitle);
+
+        const buttonTitle = context.button.querySelector('span');
+        buttonTitle && (buttonTitle.textContent = context.buttonTitle);
+
+        const isSidebar = context.button.closest(selectors.sidebar);
+
+        if (
+            context.action === actions.remove &&
+            (isSidebar || prestashop.page.page_name === favoritesController)
+        ) {
+            hideProduct();
+        }
+
+        return wait();
+    };
+
+    const hideProduct = () => {
+        const rootElement = context.button.closest(selectors.mainParent);
+        rootElement.style.transition = `all ${animationTime}ms ease-in-out`;
+        rootElement.style.opacity = 0;
+    };
+
+    const renderProducts = () => {
+        const dropdown = document.querySelector(selectors.dropdown);
+        const sidebar = document.querySelector(selectors.sidebar);
+
+        if (sidebar) {
+            sidebar.innerHTML = context.data.products;
+        }
+
+        if (dropdown) {
+            dropdown.innerHTML = context.data.miniproducts;
+            dropdown.parentElement.classList.toggle(selectors.hidden, context.data.products_number <= 0);
+            dropdown.parentElement.style.height = 'auto';
+        }
+    };
+
+    const updateProductCounter = () => {
+        const counter = context.button.querySelector('i');
+
+        if (!counter || !context.data.products_number) return;
+
+        counter.dataset[selectors.dataAttr] = context.data.products_number;
+        counter.textContent = context.data.context.data.products_number;
+    };
+
+    const updateOverallCounter = () => {
+        const counter = document.querySelector(selectors.counter);
+
+        if (!counter) return;
+
+        const qty = context.data.products_number || 0;
+
+        counter.dataset[selectors.dataAttr] = qty;
+        counter.textContent = qty;
+    };
+
+    const wait = () => {
         return new Promise((resolve) => setTimeout(resolve, this.animationTime));
-    }
-}
-new Favorites();
+    };
+
+    addEventListeners();
+
+    prestashop.on('pkelementsTabsReady', () => addEventListeners());
+});
