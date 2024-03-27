@@ -1,5 +1,5 @@
 .displayProductButtonFixed {
-    .favoritesButton {
+    .favorites-button {
         position: absolute;
         top: 20px;
         left: 20px;
@@ -10,6 +10,7 @@
         color: #333;
         svg {
             width: 14px;
+            height: 14px;
         }
         &:hover svg {
             fill: currentColor;
@@ -23,6 +24,9 @@
         &.icon_checked {
             background: none;
             color: #000;
+        }
+        &.in_progress i {
+            display: none;
         }
     }
 }

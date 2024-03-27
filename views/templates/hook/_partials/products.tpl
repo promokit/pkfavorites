@@ -2,7 +2,7 @@
 * Promokit Favorites Module
 *
 * @package   alysum
-* @version   2.3.0
+* @version   3.0.0
 * @author    https://promokit.eu
 * @copyright Copyright since 2011 promokit.eu <@email:support@promokit.eu>
 * @license   You only can use module, nothing more!

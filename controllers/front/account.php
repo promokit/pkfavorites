@@ -3,33 +3,31 @@
 * Promokit Favorites Module
 *
 * @package   alysum
-* @version   2.3.0
+* @version   3.0.0
 * @author    https://promokit.eu
 * @copyright Copyright since 2011 promokit.eu <@email:support@promokit.eu>
 * @license   You only can use module, nothing more!
 */
 
-use Promokit\Module\Pkfavorites\Main\FavoriteProduct as FavoriteProduct;
+use Promokit\Module\Pkfavorites\Main\FavoriteProduct;
+use Promokit\Module\Pkfavorites\Front\Resources;
 
 class pkfavoritesAccountModuleFrontController extends ModuleFrontController
 {
-    public $ssl = true;
-
-    public function init()
-    {
-        parent::init();
-    }
-
     public function initContent()
     {
         parent::initContent();
 
-        $favoriteProduct = new FavoriteProduct();
+        $favorites = new FavoriteProduct();
+        $favorites->saveCookiesToDb();
+
         $this->context->smarty->assign(
-          'favoriteProducts', $favoriteProduct->getProductsForTemplate($this->context->customer->id)
+            'favorites', $favorites->getProductsForTemplate()
         );
 
-        $this->setTemplate($this->module->templates['products']);
+        $this->setTemplate(
+            Resources::template('products', $this->module->name)
+        );
     }
 
     public function getBreadcrumbLinks()

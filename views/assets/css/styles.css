@@ -1,4 +1,4 @@
-.favoritesButton {
+.favorites-button {
     svg {
         fill: transparent;
         stroke: currentColor;
@@ -11,15 +11,17 @@
     i {
         font-style: normal;
         padding-left: 3px;
+        pointer-events: none;
         &:empty {
             display: none;
         }
     }
-    &.icon_checked {
-        svg {
-            fill: currentColor;
-            color: inherit;
-        }
+    &.icon_checked svg {
+        fill: currentColor;
+        color: inherit;
+    }
+    .product-actions & i {
+        display: none;
     }
 }
 .pk-no-products {

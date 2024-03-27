@@ -26,12 +26,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     const setContext = (target) => {
-        const { action, pid } = target.dataset;
+        const {action, pid} = target.dataset;
         const isAdd = action === actions.add;
         Object.assign(context, {
             button: target,
             url: isAdd ? pkfavorites.add : pkfavorites.remove,
-            message: isAdd ? pkfavorites.phrases.added : pkfavorites.phrases.removed,
+            message: isAdd
+                ? decodeString(pkfavorites.phrases.added)
+                : decodeString(pkfavorites.phrases.removed),
             buttonTitle: isAdd ? pkfavorites.phrases.remove : pkfavorites.phrases.add,
             state: isAdd ? 'success' : 'info',
             action,
@@ -40,7 +42,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     const setData = (data) => {
-        context = { ...context, data };
+        context = {...context, data};
     };
 
     const addEventListeners = () => {
@@ -55,7 +57,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const handleButtonClick = async (event) => {
         event.preventDefault();
-
+        console.debug(event.target);
         if (!event.target.dataset.pid) {
             displayMessage('Invalid product ID', 'error');
             return;
@@ -69,7 +71,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         await updateButton();
 
         renderProducts();
-        updateOverallCounter();
+        updateFavoritesCounter();
         updateProductCounter(); // update button counter of clicked product if it's enabled
 
         loaderToggler(false);
@@ -80,8 +82,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     const loaderToggler = (action) => {
-        const buttonSpan = context.button.querySelector('span');
-        const loaderElement = buttonSpan || context.button;
+        const hasTitle = context.button.querySelector('span');
+        const loaderElement = hasTitle ? context.button.querySelector('svg') : context.button;
 
         loaderElement.classList.toggle(selectors.inProgress, action);
     };
@@ -90,7 +92,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const url = `${context.url}&id_product=${context.pid}`;
 
         try {
-            const response = await fetch(url, { method: 'POST' });
+            const response = await fetch(url, {method: 'POST'});
 
             if (!response.ok) throw new Error(`Error ${response.status}`);
 
@@ -135,6 +137,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             context.action === actions.remove &&
             (isSidebar || prestashop.page.page_name === favoritesController)
         ) {
+            console.debug(selectors.mainParent);
+            console.debug(context.button.closest(selectors.mainParent));
             context.button.closest(selectors.mainParent).remove();
         }
 
@@ -151,7 +155,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (dropdown) {
             dropdown.innerHTML = context.data.miniproducts;
-            dropdown.parentElement.classList.toggle(selectors.hidden, context.data.products_number <= 0);
+            dropdown.parentElement.classList.toggle(selectors.hidden, context.data.customerFavorites <= 0);
             dropdown.parentElement.style.height = 'auto';
         }
     };
@@ -159,25 +163,34 @@ document.addEventListener('DOMContentLoaded', async () => {
     const updateProductCounter = () => {
         const counter = context.button.querySelector('i');
 
-        if (!counter || !context.data.products_number) return;
+        if (!counter || !Number.isInteger(context.data?.overallFavorites)) {
+            return;
+        }
 
-        counter.dataset[selectors.dataAttr] = context.data.products_number;
-        counter.textContent = context.data.products_number;
+        counter.textContent = context.data.overallFavorites;
     };
 
-    const updateOverallCounter = () => {
+    const updateFavoritesCounter = () => {
         const counter = document.querySelector(selectors.counter);
 
-        if (!counter) return;
+        if (!counter) {
+            return;
+        }
 
-        const qty = context.data.products_number || 0;
+        const qty = context.data.customerFavorites || 0;
 
         counter.dataset[selectors.dataAttr] = qty;
         counter.textContent = qty;
     };
 
+    const decodeString = (str) => {
+        const parser = new DOMParser();
+        const parsedHTML = parser.parseFromString(str, 'text/html');
+        return parsedHTML.documentElement.textContent;
+    };
+
     const wait = () => {
-        return new Promise((resolve) => setTimeout(resolve, this.animationTime));
+        return new Promise((resolve) => setTimeout(resolve, animationTime));
     };
 
     addEventListeners();

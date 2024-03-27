@@ -1,15 +1,17 @@
 <?php
 /**
-* Promokit Favorites Module
-*
-* @package   alysum
-* @version   2.4.0
-* @author    https://promokit.eu
-* @copyright Copyright since 2011 promokit.eu <@email:support@promokit.eu>
-* @license   You only can use module, nothing more!
-*/
+ * Promokit Favorites Module
+ *
+ * @package   alysum
+ * @version   3.0.0
+ * @author    https://promokit.eu
+ * @copyright Copyright since 2011 promokit.eu <@email:support@promokit.eu>
+ * @license   You only can use module, nothing more!
+ */
+declare(strict_types=1);
 
-use Promokit\Module\Pkfavorites\Main\FavoriteProduct as FavoriteProduct;
+use Promokit\Module\Pkfavorites\Main\FavoriteProduct;
+use Promokit\Module\Pkfavorites\Front\Resources;
 
 class pkfavoritesActionsModuleFrontController extends ModuleFrontController
 {
@@ -19,27 +21,33 @@ class pkfavoritesActionsModuleFrontController extends ModuleFrontController
     {
         parent::init();
 
-        $this->favorite = new FavoriteProduct();
-        $this->favorite->id_product = (int)Tools::getValue('id_product');
+        $this->favorite = new FavoriteProduct((int)Tools::getValue('id_product') ?? 0);
     }
 
     public function postProcess()
     {
+        parent::postProcess();
+
         (Tools::getValue('process') === 'add') ? $this->favorite->addToFavorites() : $this->favorite->removeFromFavorites();
 
-        $customerId = Context::getContext()->customer->id ?? 0;
-        $isFavorite = $this->favorite->isCustomerFavoriteProduct($customerId, $this->favorite->id_product);
-        $products = $this->favorite->getProductsForTemplate($customerId);
+        $favorites = $this->favorite->getProductsForTemplate();
 
+        $miniproducts = $this->renderContent(
+            $favorites, 
+            Resources::template('part_miniproducts', $this->module->name)
+        );
+        $products = $this->renderContent(
+            $favorites, 
+            Resources::template('part_products', $this->module->name)
+        );
+        
         header('Content-Type: application/json');
 
         die(json_encode([
-            'miniproducts' => $this->module->standalone ? false : $this->renderContent($products, $this->module->templates['part_miniproducts']),
-            'products' => $this->renderContent($products, $this->module->templates['part_products']),
-            'products_number' => count($products),
-            'overall_number' => (int)$this->favorite->countOverallNumber($customerId, $this->favorite->id_product),
-            'cid' => $customerId,
-            'id_product' => $this->favorite->id_product
+            'overallFavorites' => $this->favorite->getOverallNumber(),
+            'customerFavorites' => count($favorites),
+            'miniproducts' => $this->module::IS_STANDALONE ? false : $miniproducts,
+            'products' => $products,
         ]));
     }
 

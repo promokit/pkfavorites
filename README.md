@@ -17,6 +17,16 @@ git clone https://github.com/promokit/pkfavorites.git
 * Go to Prestashop Back-office -> Modules Catalog page, find "Promokit Favorites" module and click "Install" button
 * Visit module configuration page to adjust settings
 
+## Add product to favorites logic
+
+Action:
+  |__ADD:
+     |__Add ID to cookies
+     |__Save ID into DB If Logged In
+  |__REMOVE:
+  |__LOGIN:
+     |__Copy IDs from cookies into DB
+
 ## Submit an issue
 
 For submitting an issue, please create one in the issues tab. Remember to provide a detailed explanation of your case and a way to reproduce it.

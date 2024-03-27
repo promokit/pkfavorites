@@ -1,0 +1,11 @@
+admin_pkfavorites_configuration_get:
+    path: /pkfavorites/configuration
+    methods: [GET]
+    defaults:
+        _controller: 'Promokit\Module\Pkfavorites\Controller\AdminController::displayForm'
+
+admin_pkfavorites_configuration_set:
+    path: /pkfavorites/configuration
+    methods: [POST]
+    defaults:
+        _controller: 'Promokit\Module\Pkfavorites\Controller\AdminController::processForm'

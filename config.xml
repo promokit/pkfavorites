@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+    <name>pkfavorites</name>
+    <displayName><![CDATA[Promokit Favorites]]></displayName>
+    <version><![CDATA[2.4.0]]></version>
+    <description><![CDATA[A fast way for your customers to save a product to favorites list]]></description>
+    <author><![CDATA[promokit.eu]]></author>
+    <tab><![CDATA[front_office_features]]></tab>
+    <is_configurable>1</is_configurable>
+    <need_instance>0</need_instance>
+</module>
